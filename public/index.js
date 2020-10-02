@@ -4,7 +4,7 @@ const localStream = navigator.mediaDevices.getUserMedia({
 })
 const peer = new Peer(null, {
     // host: 'localhost',
-    host: location.hostname,
+    host: 'virtualpub.azurewebsites.net',
     // port: location.hostname === "localhost" ? 5000 : "",
     path: '/peerjs'
 })
