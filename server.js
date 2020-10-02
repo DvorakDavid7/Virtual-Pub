@@ -5,7 +5,8 @@ const port = process.env.PORT || 5000
 const app = express()
 const server = require('http').createServer(app)
 const peerServer = ExpressPeerServer(server, {
-    allow_discovery: true
+    allow_discovery: true,
+    perMessageDeflate: false
 })
 
 app.set('view engine', 'ejs')
