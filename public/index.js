@@ -3,9 +3,8 @@ const localStream = navigator.mediaDevices.getUserMedia({
     audio : true
 })
 const peer = new Peer(null, {
-    // host: 'localhost',
-    host: 'virtualpub.azurewebsites.net',
-    // port: location.hostname === "localhost" ? 5000 : "",
+    host: location.hostname,
+    port: location.hostname === "localhost" ? 5000 : location.port,
     path: '/peerjs'
 })
 const videoGrid = document.querySelector('#video-grid')
