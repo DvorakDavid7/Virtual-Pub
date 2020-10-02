@@ -5,7 +5,7 @@ const localStream = navigator.mediaDevices.getUserMedia({
 const peer = new Peer(null, {
     // host: 'localhost',
     host: location.hostname,
-    port: location.hostname === "localhost" ? 5000 : "",
+    // port: location.hostname === "localhost" ? 5000 : "",
     path: '/peerjs'
 })
 const videoGrid = document.querySelector('#video-grid')
