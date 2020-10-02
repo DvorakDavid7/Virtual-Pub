@@ -22,6 +22,12 @@ peer.on('open', async (id) => {
             callUser(peerId)
         }
     })
+
+    // cheers button event listener
+    document.querySelector("#cheers").addEventListener("click", () => {
+        document.querySelector(".cheers").play()
+        sendEventToAllPeers("cheers")
+    });
 })
 
 
@@ -34,8 +40,14 @@ peer.on('call', async (call) => {
 
 
 peer.on('connection', connection => {
-    connection.on('data', data => {
-        console.dir(data)
+    connection.on('data', event => {
+        switch (event) {
+            case "cheers":
+                document.querySelector(".cheers").play()
+                break;
+            default:
+                break;
+        }
     })
     connection.on('error', console.error)
 })
@@ -75,4 +87,16 @@ function addVideoStream (videoEl, stream) {
 function removeVideoStream (videoEl) {
     videoEl.stop()
     videoEl.remove()
+}
+
+
+function sendEventToAllPeers(event) {
+    peer.listAllPeers(peers => {
+        for (let peerId of peers) {
+            let conn = peer.connect(peerId);
+            conn.on("open", () => {
+                conn.send(event);
+            });
+        }
+    })
 }
