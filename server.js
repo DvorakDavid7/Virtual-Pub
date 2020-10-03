@@ -16,9 +16,15 @@ app.use(express.static('public'))
 app.use(express.json())
 app.use('/peerjs', peerServer)
 
-app.get('/:roomId', (req, res) => {
+app.get('/', (req, res) => {
     res.render('index')
 })
+
+
+app.get('/:roomId', (req, res) => {
+    res.render('room')
+})
+
 
 app.get("/clients/list", (req, res) => {
     res.send(getClients())
@@ -32,6 +38,18 @@ app.post("/clients/save", (req, res) => {
     fs.writeFileSync(path.resolve(__dirname, 'clients.json'), JSON.stringify(currentClients, null, 4));
     res.statusCode = 200
     res.send()
+})
+
+
+app.post("/user/check_password", (req, res) => {
+    const password = "a"
+    res.statusCode = 200
+    if (req.body.password === password) {
+        res.send("true")
+    }
+    else {
+        res.send("false")
+    }
 })
 
 
