@@ -8,21 +8,22 @@ const peer = new Peer(null, {
     path: '/peerjs'
 })
 const videoGrid = document.querySelector('#video-grid')
+const ROOM_ID = location.pathname.replace("/", "")
 
 
 peer.on('open', async (id) => {
     console.info(`connected to peerjs with id: ${id}`)
+    sendIdandRoom(id, ROOM_ID)
     const video = document.createElement('video')
     video.muted = true
     addVideoStream(video, await localStream)
 
-    peer.listAllPeers(peers => {
-        for (const peerId of peers) {
-            if (peerId === id) { continue }
-            callUser(peerId)
-        }
-    })
-
+    const peers = await getConnectedClientsInRoom(ROOM_ID)
+    for (let peerId of peers) {
+        if (peerId === id) continue
+        callUser(peerId)
+    }
+    
     // cheers button event listener
     document.querySelector("#cheers").addEventListener("click", () => {
         document.querySelector(".cheers").play()
@@ -53,6 +54,19 @@ peer.on('connection', connection => {
 })
 
 
+window.addEventListener('beforeunload', (e) => {
+    e.preventDefault()
+    peer.disconnect()
+});
+
+
+// Function declarations 
+
+
+/**
+ * 
+ * @param {string} userId 
+ */
 async function callUser (userId) {
     console.info(`calling: ${userId}`)
 
@@ -90,13 +104,54 @@ function removeVideoStream (videoEl) {
 }
 
 
-function sendEventToAllPeers(event) {
-    peer.listAllPeers(peers => {
-        for (let peerId of peers) {
-            let conn = peer.connect(peerId);
-            conn.on("open", () => {
-                conn.send(event);
-            });
-        }
+/**
+ * Send message to all peers in current room
+ * @param {string} event event name
+ */
+async function sendEventToAllPeers(event) {
+    const peers = await getConnectedClientsInRoom(ROOM_ID)
+    for (let peerId of peers) {
+        let conn = peer.connect(peerId);
+        conn.on("open", () => {
+            conn.send(event);
+        });
+    }
+}
+
+
+/**
+ * send Client ID and Room ID to server
+ * @param {string} clientId 
+ * @param {string} roomId 
+ */
+async function sendIdandRoom(clientId, roomId) {
+    const data = {
+        clientId,
+        roomId
+    }
+    _ = await fetch("/clients/save", {
+        method: "POST",
+        headers: {
+            "Content-type": "application/json"
+        },
+        body: JSON.stringify(data)
     })
+}
+
+
+/**
+ * Get list of all clients and returns clients in current room
+ * @param {string} roomId
+ * @returns {Promise<Array<string>>} array of peer ids
+ */
+async function getConnectedClientsInRoom(roomId) {
+    let result = []
+    const response = await fetch("/clients/list")
+    const clients = await response.json()
+    for (let client of clients) {
+        if (client.roomId === roomId) {
+            result.push(client.clientId)
+        }
+    }
+    return result
 }
