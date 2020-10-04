@@ -172,7 +172,7 @@ async function getConnectedClientsInRoom(roomId) {
  * change bg image adn play campfire sound
  */
 function tentAFire() {
-    const DELAY = 1000 * 1 * 60
+    const DELAY = 1000 * 3 * 60
     const campfire = document.querySelector(".campfire") 
 
     if (!fire) {
