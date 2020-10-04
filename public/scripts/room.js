@@ -9,6 +9,7 @@ const peer = new Peer(null, {
 })
 const videoGrid = document.querySelector('#video-grid')
 const ROOM_ID = location.pathname.replace("/", "")
+let fire = false
 
 
 peer.on('open', async (id) => {
@@ -29,6 +30,12 @@ peer.on('open', async (id) => {
         document.querySelector(".cheers").play()
         sendEventToAllPeers("cheers")
     });
+
+    // change bg image
+    document.querySelector("#fire-bg").addEventListener("click", () => {
+        tentAFire()
+        sendEventToAllPeers("change-bg")
+    });
 })
 
 
@@ -46,6 +53,11 @@ peer.on('connection', connection => {
             case "cheers":
                 document.querySelector(".cheers").play()
                 break;
+            
+            case "change-bg":
+                tentAFire()
+                break
+
             default:
                 break;
         }
@@ -154,4 +166,24 @@ async function getConnectedClientsInRoom(roomId) {
         }
     }
     return result
+}
+
+/**
+ * change bg image adn play campfire sound
+ */
+function tentAFire() {
+    const DELAY = 1000 * 3 * 60
+    const campfire = document.querySelector(".campfire") 
+
+    if (!fire) {
+        fire = true
+        campfire.play()
+        campfire.volume = 0.5
+        document.querySelector("#container img.top").classList.add("transparent")
+        setTimeout(() => {
+            document.querySelector("#container img.top").classList.toggle("transparent")
+            campfire.pause()
+            fire = false
+        }, DELAY);
+    }
 }

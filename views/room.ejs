@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="styles/room.css">
 </head>
 <style>
     video {
@@ -11,21 +12,28 @@
         height: 5%;
     }
 </style>
-<body>   
-    <audio class="music" loop controls>
-        <source src="music/wowtavern.mp3" type="audio/mpeg">
-    </audio>
+<body>
+    <div id="container" class="shadow">
+        <img class="bottom" src="/images/tavern_height.png" />
+        <img class="top" src="/images/tavern_low.jpg" />
 
-    <audio class="medival-music" loop controls>
-        <source src="music/medival_music.mp3" type="audio/mpeg">
-    </audio>
+        <audio class="campfire" loop>
+            <source src="music/campfire.mp3" type="audio/mpeg">
+        </audio>
+    
+        <audio class="medival-music" loop controls>
+            <source src="music/medival_music.mp3" type="audio/mpeg">
+        </audio>
+    
+        <audio class="cheers">
+            <source src="music/cheers.mp3" type="audio/mpeg">
+        </audio>
 
-    <audio class="cheers">
-        <source src="music/cheers.mp3" type="audio/mpeg">
-    </audio>
+        <div id="video-grid"></div>
+        <button id="cheers">cheers</button>
+        <button id="fire-bg">Tent a fire</button>
+    </div>
 
-    <div id="video-grid"></div>
-    <button id="cheers">cheers</button>
     <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
     <script src="scripts/room.js"></script>
 </body>

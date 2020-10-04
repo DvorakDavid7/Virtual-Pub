@@ -42,7 +42,7 @@ app.post("/clients/save", (req, res) => {
 
 
 app.post("/user/check_password", (req, res) => {
-    const password = "a"
+    const password = "siberka"
     res.statusCode = 200
     if (req.body.password === password) {
         res.send("true")
